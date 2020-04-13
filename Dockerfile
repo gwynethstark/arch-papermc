@@ -1,6 +1,5 @@
 FROM binhex/arch-base:latest
-MAINTAINER binhex
-
+LABEL maintainer="GwynethStark"
     # additional files
     ##################
 
