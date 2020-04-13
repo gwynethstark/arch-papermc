@@ -2,9 +2,14 @@
 
 [Minecraft Server](https://www.minecraft.net/en-us/download/server/)
 
+[PaperMC](https://papermc.io/)
+
 **Description**
 
 Minecraft is a sandbox video game created by Swedish game developer Markus Persson and released by Mojang in 2011. The game allows players to build with a variety of different blocks in a 3D procedurally generated world, requiring creativity from players. Other activities in the game include exploration, resource gathering, crafting, and combat. Multiple game modes that change gameplay are available, including—but not limited to—a survival mode, in which players must acquire resources to build the world and maintain health, and a creative mode, where players have unlimited resources to build with.
+
+
+Paper is the next generation of Minecraft server, compatible with Spigot plugins and offering uncompromising performance.
 
 **Build notes**
 
@@ -24,7 +29,7 @@ docker run -d \
     -e UMASK=<umask for created files> \
     -e PUID=<uid for user> \
     -e PGID=<gid for user> \
-    binhex/arch-minecraftserver
+    gwynethstark/arch-papermc
 ```
 
 Please replace all user variables in the above command defined by <> with the correct values.
@@ -33,17 +38,17 @@ Please replace all user variables in the above command defined by <> with the co
 ```
 docker run -d \
     -p 25565:25565 \
-    --name=minecraftserver \
+    --name=papermc \
     -v /apps/docker/minecraftserver:/config \
     -v /etc/localtime:/etc/localtime:ro \
     -e MAX_BACKUPS=10 \
-    -e JAVA_INITIAL_HEAP_SIZE=512M \
-    -e JAVA_MAX_HEAP_SIZE=1024M \
+    -e JAVA_INITIAL_HEAP_SIZE=1024M \
+    -e JAVA_MAX_HEAP_SIZE=2048M \
     -e JAVA_MAX_THREADS=1 \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \
-    binhex/arch-minecraftserver
+    gwynethstark/papermc
 ```
 
 **Notes**
@@ -53,7 +58,7 @@ JAVA_INITIAL_HEAP_SIZE value and JAVA_MAX_HEAP_SIZE values must be a multiple of
 If you want to connect to the minecraft server console then issue the following command, use CTRL+a and then press 'd' to disconnect from the session, leaving it running.
 
 ```
-docker exec -u nobody -it <name of container> /usr/bin/minecraftd console
+docker exec -u nobody -it <name of container> /usr/bin/papermc console
 ```
 
 User ID (PUID) and Group ID (PGID) can be found by issuing the following command for the user you want to run the container as:-
@@ -62,8 +67,4 @@ User ID (PUID) and Group ID (PGID) can be found by issuing the following command
 id <username>
 ```
 ___
-If you appreciate my work, then please consider buying me a beer  :D
-
-[![PayPal donation](https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MM5E27UX6AUU4)
-
-[Documentation](https://github.com/binhex/documentation) | [Support forum](https://forums.unraid.net/topic/84880-support-binhex-minecraftserver/)
+This project is based on [binhex's minecraftserver](https://github.com/binhex/arch-minecraftserver) Docker package.

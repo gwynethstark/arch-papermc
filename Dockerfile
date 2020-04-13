@@ -1,39 +1,39 @@
 FROM binhex/arch-base:latest
 MAINTAINER binhex
 
-# additional files
-##################
+    # additional files
+    ##################
 
-# add supervisor conf file for app
-ADD build/*.conf /etc/supervisor/conf.d/
+    # add supervisor conf file for app
+    ADD build/*.conf /etc/supervisor/conf.d/
 
-# add install bash script
-ADD build/root/*.sh /root/
+    # add install bash script
+    ADD build/root/*.sh /root/
 
-# add run bash script
-ADD run/nobody/*.sh /home/nobody/
+    # add run bash script
+    ADD run/nobody/*.sh /home/nobody/
 
-# add pre-configured config files for minecraft
-ADD config/nobody/ /home/nobody/
+    # add pre-configured config files for papermc
+    ADD config/nobody/ /home/nobody/
 
-# install app
-#############
+    # install app
+    #############
 
-# make executable and run bash scripts to install app
-RUN chmod +x /root/*.sh && \
-	/bin/bash /root/install.sh
+    # make executable and run bash scripts to install app
+    RUN chmod +x /root/*.sh && \
+        /bin/bash /root/install.sh
 
-# docker settings
-#################
+    # docker settings
+    #################
 
-# map /config to host defined config path (used to store configuration from app)
-VOLUME /config
+    # map /config to host defined config path (used to store configuration from app)
+    VOLUME /config
 
-# expose port for minecraft
-EXPOSE 25565
+    # expose port for papermc
+    EXPOSE 25565
 
-# set permissions
-#################
+    # set permissions
+    #################
 
-# run script to set uid, gid and permissions
-CMD ["/bin/bash", "/usr/local/bin/init.sh"]
+    # run script to set uid, gid and permissions
+    CMD ["/bin/bash", "/usr/local/bin/init.sh"]

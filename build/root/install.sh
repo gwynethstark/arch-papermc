@@ -30,16 +30,16 @@ fi
 ####
 
 # define aur packages
-aur_packages="minecraft-server"
+aur_packages="papermc"
 
 # call aur install script (arch user repo)
 source aur.sh
 
-# config java minecraft
+# config java papermc
 ####
 
-# copy config file containing env vars, sourced in from /usr/bin/minecraftd
-cp /home/nobody/minecraft /etc/conf.d/minecraft
+# copy config file containing env vars, sourced in from /usr/bin/papermc
+cp /home/nobody/papermc /etc/conf.d/papermc
 
 # container perms
 ####
