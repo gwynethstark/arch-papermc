@@ -28,8 +28,9 @@ LABEL maintainer="GwynethStark"
     # map /config to host defined config path (used to store configuration from app)
     VOLUME /config
 
-    # expose port for papermc
+    # expose port for papermc and DynMap
     EXPOSE 25565
+    EXPOSE 8123
 
     # set permissions
     #################
