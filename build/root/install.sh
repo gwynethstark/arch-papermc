@@ -30,7 +30,7 @@ fi
 ####
 
 # define aur packages
-aur_packages="papermc"
+aur_packages="spigot"
 
 # call aur install script (arch user repo)
 source aur.sh
@@ -39,7 +39,7 @@ source aur.sh
 ####
 
 # copy config file containing env vars, sourced in from /usr/bin/papermc
-cp /home/nobody/papermc /etc/conf.d/papermc
+cp /home/nobody/spigot /etc/conf.d/spigot
 
 # container perms
 ####

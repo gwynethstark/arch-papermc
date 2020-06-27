@@ -12,7 +12,7 @@ LABEL maintainer="GwynethStark"
     # add run bash script
     ADD run/nobody/*.sh /home/nobody/
 
-    # add pre-configured config files for papermc
+    # add pre-configured config files for spigot
     ADD config/nobody/ /home/nobody/
 
     # install app
@@ -28,7 +28,7 @@ LABEL maintainer="GwynethStark"
     # map /config to host defined config path (used to store configuration from app)
     VOLUME /config
 
-    # expose port for papermc and DynMap
+    # expose port for spigot and DynMap
     EXPOSE 25565
     EXPOSE 8123
 
