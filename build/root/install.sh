@@ -15,6 +15,22 @@ unzip /tmp/scripts-master.zip -d /tmp
 # move shell scripts to /root
 mv /tmp/scripts-master/shell/arch/docker/*.sh /usr/local/bin/
 
+# detect image arch
+####
+
+OS_ARCH=$(cat /etc/os-release | grep -P -o -m 1 "(?=^ID\=).*" | grep -P -o -m 1 "[a-z]+$")
+if [[ ! -z "${OS_ARCH}" ]]; then
+	if [[ "${OS_ARCH}" == "arch" ]]; then
+		OS_ARCH="x86-64"
+	else
+		OS_ARCH="aarch64"
+	fi
+	echo "[info] OS_ARCH defined as '${OS_ARCH}'"
+else
+	echo "[warn] Unable to identify OS_ARCH, defaulting to 'x86-64'"
+	OS_ARCH="x86-64"
+fi
+
 # pacman packages
 ####
 
@@ -35,10 +51,10 @@ aur_packages="spigot"
 # call aur install script (arch user repo)
 source aur.sh
 
-# config java papermc
+# config java spigot
 ####
 
-# copy config file containing env vars, sourced in from /usr/bin/papermc
+# copy config file containing env vars, sourced in from /usr/bin/spigot
 cp /home/nobody/spigot /etc/conf.d/spigot
 
 # container perms
