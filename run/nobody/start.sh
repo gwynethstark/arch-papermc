@@ -6,14 +6,14 @@ if [ ! -d "/config/spigot" ]; then
 	echo "[info] spigot folder doesnt exist, copying default to '/config/spigot/'..."
 
 	mkdir -p /config/spigot
-	if [[ -d "/srv/spigot" ]]; then
-		cp -R /srv/spigot/* /config/spigot/ 2>/dev/null || true
+	if [[ -d "/srv/craftbukkit" ]]; then
+		cp -R /srv/craftbukkit/* /config/spigot/ 2>/dev/null || true
 	fi
 
 else
 
 	echo "[info] Spigot folder '/config/spigot' already exists, rsyncing newer files..."
-	rsync -rlt --exclude 'world' --exclude '/server.properties' --exclude '/*.json' /srv/spigot/ /config/spigot
+	rsync -rlt --exclude 'world' --exclude '/server.properties' --exclude '/*.json' /srv/craftbukkit/ /config/spigot
 
 fi
 
