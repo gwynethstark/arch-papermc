@@ -9,7 +9,7 @@ BACKUP_DEST="/config/spigot/backup"
 BACKUP_PATHS="world" # World paths separated by spaces relative to SERVER_ROOT
 KEEP_BACKUPS="${MAX_BACKUPS}"
 GAME_USER="nobody"
-MAIN_EXECUTABLE="spigot-1.16.1.jar"
+MAIN_EXECUTABLE="spigot.jar"
 SESSION_NAME="spigot"
 
 # System parameters for java

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# if papermc folder doesnt exist then copy default to host config volume
+# if spigot folder doesnt exist then copy default to host config volume
 if [ ! -d "/config/spigot" ]; then
 
 	echo "[info] spigot folder doesnt exist, copying default to '/config/spigot/'..."
