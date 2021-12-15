@@ -38,7 +38,7 @@ fi
 ####
 
 # define pacman packages
-pacman_packages="jre-openjdk-headless screen rsync"
+pacman_packages="jre-openjdk-headless libjpeg-turbo lcsm2 harfbuzz screen rsync"
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
