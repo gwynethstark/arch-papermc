@@ -15,6 +15,8 @@ unzip /tmp/scripts-master.zip -d /tmp
 # move shell scripts to /root
 mv /tmp/scripts-master/shell/arch/docker/*.sh /usr/local/bin/
 
+mv /home/nobody/aur.sh /usr/local/bin/
+
 # detect image arch
 ####
 
