@@ -41,23 +41,23 @@ if [[ ! -z "${aur_packages}" ]]; then
 		# install git, used to pull down aur helper from github
 		pacman -S git sudo --noconfirm
 
-		aur_helper_package_name="yay-11.0.2-1-x86_64.pkg.tar.zst"
+		#aur_helper_package_name="yay-11.0.2-1-x86_64.pkg.tar.zst"
 
 		# download compiled aur helper
-		rcurl.sh -o "/tmp/${aur_helper_package_name}" "https://github.com/gwynethstark/arch-packages/raw/master/compiled/yay-11.0.2-1-x86_64.pkg.tar.zst"
+		#rcurl.sh -o "/tmp/${aur_helper_package_name}" "https://github.com/gwynethstark/arch-packages/raw/master/compiled/yay-11.0.2-1-x86_64.pkg.tar.zst"
 
 		# install aur helper
-		pacman -U "/tmp/${aur_helper_package_name}" --noconfirm
+		#pacman -U "/tmp/${aur_helper_package_name}" --noconfirm
 
 		# compile and install aur helper
 		# strip out restriction to not allow make as user root, used during make of aur helper
 		#sed -i -e 's~exit $E_ROOT~~g' "/usr/bin/makepkg"
 		# download and install aur helper
-		#cd /tmp
-		#git clone https://aur.archlinux.org/yay-bin.git
-		#cd yay-bin
-		#makepkg -sri --noconfirm
-		#cd /tmp
+		cd /tmp
+		git clone https://aur.archlinux.org/yay-bin.git
+		cd yay-bin
+		makepkg -sri --noconfirm
+		cd /tmp
 
 	fi
 
