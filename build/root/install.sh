@@ -67,12 +67,8 @@ fi
 # custom
 ####
 
-# identify minecraft download url
-url_download=$(rcurl.sh -s "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar" | jq -r .downloads.server.url)
-echo "[info] Minecraft Java download URL is '${url_download}'"
-
 # download compiled minecraft java server
-rcurl.sh -o "/tmp/minecraft_server.jar" "${url_download}"
+rcurl.sh -o "/tmp/minecraft_server.jar" "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar"
 
 # move minecraft java server
 mkdir -p "/srv/minecraft" && mv "/tmp/minecraft_server.jar" "/srv/minecraft/"
