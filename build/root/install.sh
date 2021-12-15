@@ -68,7 +68,7 @@ fi
 ####
 
 # identify minecraft download url
-url_download=$(rcurl.sh -s "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar")
+url_download=$(rcurl.sh -s "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar" | jq -r .downloads.server.url)
 echo "[info] Minecraft Java download URL is '${url_download}'"
 
 # download compiled minecraft java server
