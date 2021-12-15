@@ -38,7 +38,7 @@ fi
 ####
 
 # define pacman packages
-pacman_packages="jre8-openjdk-headless jre11-openjdk-headless jre-openjdk-headless screen rsync"
+pacman_packages="jre-openjdk-headless screen rsync"
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
@@ -66,6 +66,9 @@ fi
 
 # custom
 ####
+
+rcurl.sh -o "/tmp/jre-openjdk-headless-17.0.1.u12-1-x86_64.pkg.tar.zst" "https://archlinux.org/packages/extra/x86_64/jre-openjdk-headless/download"
+pacman -U "/tmp/jre-openjdk-headless-17.0.1.u12-1-x86_64.pkg.tar.zst" --noconfirm
 
 # download compiled minecraft java server
 rcurl.sh -o "/tmp/minecraft_server.jar" "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar"
