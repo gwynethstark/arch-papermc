@@ -1,39 +1,40 @@
 FROM binhex/arch-base:latest
-LABEL maintainer="GwynethStark"
-    # additional files
-    ##################
+LABEL org.opencontainers.image.authors = "binhex"
+LABEL org.opencontainers.image.source = "https://github.com/binhex/arch-minecraftserver"
 
-    # add supervisor conf file for app
-    ADD build/*.conf /etc/supervisor/conf.d/
+# additional files
+##################
 
-    # add install bash script
-    ADD build/root/*.sh /root/
+# add supervisor conf file for app
+ADD build/*.conf /etc/supervisor/conf.d/
 
-    # add run bash script
-    ADD run/nobody/*.sh /home/nobody/
+# add install bash script
+ADD build/root/*.sh /root/
 
-    # add pre-configured config files for papermc
-    ADD config/nobody/ /home/nobody/
+# get release tag name from build arg
+ARG release_tag_name
 
-    # install app
-    #############
+# add run bash script
+ADD run/nobody/*.sh /home/nobody/
 
-    # make executable and run bash scripts to install app
-    RUN chmod +x /root/*.sh && \
-        /bin/bash /root/install.sh
+# install app
+#############
 
-    # docker settings
-    #################
+# make executable and run bash scripts to install app
+RUN chmod +x /root/*.sh && \
+	/bin/bash /root/install.sh "${release_tag_name}"
 
-    # map /config to host defined config path (used to store configuration from app)
-    VOLUME /config
+# docker settings
+#################
 
-    # expose port for papermc and DynMap
-    EXPOSE 25565
-    EXPOSE 8123
+# expose port for minecraft
+EXPOSE 25565
 
-    # set permissions
-    #################
+# expose ipv4 port for minecraft web ui console
+EXPOSE 8222/tcp
 
-    # run script to set uid, gid and permissions
-    CMD ["/bin/bash", "/usr/local/bin/init.sh"]
+# set permissions
+#################
+
+# run script to set uid, gid and permissions
+CMD ["/bin/bash", "/usr/local/bin/init.sh"]
