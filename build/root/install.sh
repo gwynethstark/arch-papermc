@@ -38,15 +38,12 @@ fi
 ####
 
 # define pacman packages
-pacman_packages="jre-openjdk-headless libjpeg-turbo lcms2 harfbuzz screen rsync"
+pacman_packages="jre-openjdk-headless screen rsync"
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
 	pacman -S --needed $pacman_packages --noconfirm
 fi
-
-rcurl.sh -o "/tmp/jre-openjdk-headless-17.0.1.u12-1-x86_64.pkg.tar.zst" "https://archlinux.org/packages/extra/x86_64/jre-openjdk-headless/download"
-pacman -U "/tmp/jre-openjdk-headless-17.0.1.u12-1-x86_64.pkg.tar.zst" --noconfirm
 
 # aur packages
 ####
