@@ -3,16 +3,16 @@
 
 function copy_minecraft(){
 
-	if [[ -z "${CUSTOM_JAR_PATH}" || "${CUSTOM_JAR_PATH}" == '/config/papermc/papermc_server.jar' ]]; then
+	if [[ -z "${CUSTOM_JAR_PATH}" || "${CUSTOM_JAR_PATH}" == '/config/minecraft/minecraft_server.jar' ]]; then
 
 		# if minecraft server.properties file doesnt exist then copy default to host config volume
-		if [ ! -f "/config/papermc/server.properties" ]; then
+		if [ ! -f "/config/minecraft/server.properties" ]; then
 
-			echo "[info] Minecraft 'server.properties' file doesnt exist, copying default installation from '/srv/papermc' to '/config/papermc/'..."
+			echo "[info] Minecraft 'server.properties' file doesnt exist, copying default installation from '/srv/minecraft' to '/config/minecraft/'..."
 
-			mkdir -p /config/papermc
-			if [[ -d "/srv/papermc" ]]; then
-				cp -R /srv/papermc/* /config/papermc/ 2>/dev/null || true
+			mkdir -p /config/minecraft
+			if [[ -d "/srv/minecraft" ]]; then
+				cp -R /srv/minecraft/* /config/minecraft/ 2>/dev/null || true
 			fi
 
 		else
@@ -22,8 +22,8 @@ function copy_minecraft(){
 			# -l = copy source symlinks as symlinks on destination
 			# -t = keep source modification times for destination files/folders
 			# -p = keep source permissions for destination files/folders
-			echo "[info] Minecraft folder '/config/papermc' already exists, rsyncing newer files..."
-			rsync -rltp --exclude 'world' --exclude '/server.properties' --exclude '/*.json' /srv/papermc/ /config/papermc
+			echo "[info] Minecraft folder '/config/minecraft' already exists, rsyncing newer files..."
+			rsync -rltp --exclude 'world' --exclude '/server.properties' --exclude '/*.json' /srv/minecraft/ /config/minecraft
 
 		fi
 
@@ -33,9 +33,9 @@ function copy_minecraft(){
 
 function accept_eula() {
 
-	if [[ -z "${CUSTOM_JAR_PATH}" || "${CUSTOM_JAR_PATH}" == '/config/papermc/papermc_server.jar' ]]; then
+	if [[ -z "${CUSTOM_JAR_PATH}" || "${CUSTOM_JAR_PATH}" == '/config/minecraft/minecraft_server.jar' ]]; then
 
-		eula_filepath="/config/papermc/eula.txt"
+		eula_filepath="/config/minecraft/eula.txt"
 
 	else
 
@@ -72,11 +72,11 @@ function accept_eula() {
 function start_minecraft() {
 
 	# create logs sub folder to store screen output from console
-	mkdir -p /config/papermc/logs
+	mkdir -p /config/minecraft/logs
 
 	# run screen attached to minecraft (daemonized, non-blocking) to allow users to run commands in minecraft console
 	echo "[info] Starting Minecraft Java process..."
-	screen -L -Logfile '/config/papermc/logs/screen.log' -d -S papermc -m bash -c "cd /config/papermc && java -Xms${JAVA_INITIAL_HEAP_SIZE} -Xmx${JAVA_MAX_HEAP_SIZE} -XX:ParallelGCThreads=${JAVA_MAX_THREADS} -jar ${CUSTOM_JAR_PATH} nogui"
+	screen -L -Logfile '/config/minecraft/logs/screen.log' -d -S minecraft -m bash -c "cd /config/minecraft && java -Xms${JAVA_INITIAL_HEAP_SIZE} -Xmx${JAVA_MAX_HEAP_SIZE} -XX:ParallelGCThreads=${JAVA_MAX_THREADS} -jar ${CUSTOM_JAR_PATH} nogui"
 	echo "[info] Minecraft Java process is running"
 	if [[ ! -z "${STARTUP_CMD}" ]]; then
 		startup_cmd
@@ -92,7 +92,7 @@ function startup_cmd() {
 	# process startup cmds in the array
 	for startup_cmd_item in "${startup_cmd_array[@]}"; do
 		echo "[info] Executing startup Minecraft command '${startup_cmd_item}'"
-		screen -S papermc -p 0 -X stuff "${startup_cmd_item}^M"
+		screen -S minecraft -p 0 -X stuff "${startup_cmd_item}^M"
 	done
 
 }

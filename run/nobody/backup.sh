@@ -9,9 +9,9 @@ function run_console_command() {
 
 	retry_count=6
 
-	while ! tail -n 5 '/config/papermc/logs/screen.log' | grep -q -P "${screen_message}"; do
+	while ! tail -n 5 '/config/minecraft/logs/screen.log' | grep -q -P "${screen_message}"; do
 
-		screen -r papermc -p 0 -X stuff "${console_command}^M"
+		screen -r minecraft -p 0 -X stuff "${console_command}^M"
 		retry_count=$((retry_count-1))
 
 		if [ "${retry_count}" -eq "0" ]; then
@@ -36,7 +36,7 @@ if [[ "${CREATE_BACKUP_HOURS}" -gt 0 ]]; then
 		echo "[info] Waiting ${CREATE_BACKUP_HOURS} hours before running worlds backup..."
 		sleep "${CREATE_BACKUP_HOURS}"h
 
-		if [ ! -f '/config/papermc/logs/screen.log' ]; then
+		if [ ! -f '/config/minecraft/logs/screen.log' ]; then
 			echo "[warn] Screen logging of the Minecraft console is not enabled, exiting backup script..."; exit 1
 		fi
 
@@ -58,10 +58,10 @@ if [[ "${CREATE_BACKUP_HOURS}" -gt 0 ]]; then
 			datetime=$(date +%Y%m%d-%H%M%S)
 
 			# create backup sub folder to store backups of worlds
-			mkdir -p "/config/papermc/backups/${datetime}"
+			mkdir -p "/config/minecraft/backups/${datetime}"
 
-			echo "[info] Minecraft worlds are now ready for backup, backing up to '/config/papermc/backups/${datetime}/'..."
-			cp -R "/config/papermc/world" "/config/papermc/backups/${datetime}"
+			echo "[info] Minecraft worlds are now ready for backup, backing up to '/config/minecraft/backups/${datetime}/'..."
+			cp -R "/config/minecraft/world" "/config/minecraft/backups/${datetime}"
 
 		fi
 

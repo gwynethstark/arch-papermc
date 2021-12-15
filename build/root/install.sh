@@ -3,6 +3,14 @@
 # exit script if return code != 0
 set -e
 
+# release tag name from build arg, stripped of build ver using string manipulation
+release_tag_name="${1//-[0-9][0-9]/}"
+
+if [[ -z "${release_tag_name}" ]]; then
+	echo "[warn] Release tag name from build arg is empty, exiting script..."
+	exit 1
+fi
+
 # build scripts
 ####
 
@@ -14,8 +22,6 @@ unzip /tmp/scripts-master.zip -d /tmp
 
 # move shell scripts to /root
 mv /tmp/scripts-master/shell/arch/docker/*.sh /usr/local/bin/
-
-mv /home/nobody/aur.sh /usr/local/bin/
 
 # detect image arch
 ####
@@ -48,7 +54,7 @@ fi
 ####
 
 # define aur packages
-aur_packages="papermc"
+aur_packages=""
 
 # call aur install script (arch user repo)
 source aur.sh
@@ -63,11 +69,43 @@ elif [[ "${OS_ARCH}" == "aarch64" ]]; then
 	github.sh --install-path /usr/bin --github-owner yudai --github-repo gotty --download-assets gotty_linux_arm.tar.gz
 fi
 
+# custom
+####
+
+https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar
+
+# get json for latest 'release'
+release_json=$(rcurl.sh -s 'https://launchermeta.mojang.com/mc/game/version_manifest_v2.json' |  jq '[.versions[] | select(.type=="release")][0]')
+
+# identify minecraft version
+id=$(echo "${release_json}" | jq -r .id)
+echo "[info] Minecraft Java version is '${id}'"
+
+# check release tag name matches version from json
+if [[ "${release_tag_name}" != "${id}" ]]; then
+	echo "[warn] Release tag name from build arg '${release_tag_name}' does not match id '${id}' from json, exiting script..."
+	exit 1
+fi
+
+# identify minecraft download url json
+url_json=$(echo "${release_json}" | jq -r .url)
+echo "[info] Minecraft Java JSON URL is '${url_json}'"
+
+# identify minecraft download url
+url_download=$(rcurl.sh -s "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar")
+echo "[info] Minecraft Java download URL is '${url_download}'"
+
+# download compiled minecraft java server
+rcurl.sh -o "/tmp/minecraft_server.jar" "${url_download}"
+
+# move minecraft java server
+mkdir -p "/srv/minecraft" && mv "/tmp/minecraft_server.jar" "/srv/minecraft/"
+
 # container perms
 ####
 
 # define comma separated list of paths
-install_paths="/srv/papermc,/home/nobody"
+install_paths="/srv/minecraft,/home/nobody"
 
 # split comma separated string into list for install paths
 IFS=',' read -ra install_paths_list <<< "${install_paths}"
@@ -173,11 +211,11 @@ if [[ "${ENABLE_WEBUI_CONSOLE}" == "yes" ]]; then
 				echo "[info] WEBUI_PASS defined as '${WEBUI_PASS}'" | ts '%Y-%m-%d %H:%M:%.S'
 			fi
 		else
-			WEBUI_PASS_file="/config/papermc/security/WEBUI_PASS"
+			WEBUI_PASS_file="/config/minecraft/security/WEBUI_PASS"
 			if [ ! -f "${WEBUI_PASS_file}" ]; then
 				# generate random password for web ui using SHA to hash the date,
 				# run through base64, and then output the top 16 characters to a file.
-				mkdir -p "/config/papermc/security" ; chown -R nobody:users "/config/papermc"
+				mkdir -p "/config/minecraft/security" ; chown -R nobody:users "/config/minecraft"
 				date +%s | sha256sum | base64 | head -c 16 > "${WEBUI_PASS_file}"
 			fi
 			echo "[warn] WEBUI_PASS not defined (via -e WEBUI_PASS), using randomised password (password stored in '${WEBUI_PASS_file}')" | ts '%Y-%m-%d %H:%M:%.S'
@@ -198,8 +236,8 @@ export CUSTOM_JAR_PATH=$(echo "${CUSTOM_JAR_PATH}" | sed -e 's~^[ \t]*~~;s~[ \t]
 if [[ ! -z "${CUSTOM_JAR_PATH}" ]]; then
 	echo "[info] CUSTOM_JAR_PATH defined as '${CUSTOM_JAR_PATH}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[info] CUSTOM_JAR_PATH not defined,(via -e CUSTOM_JAR_PATH), defaulting to '/config/papermc/papermc_server.jar' (Mojang Minecraft Java)" | ts '%Y-%m-%d %H:%M:%.S'
-	export CUSTOM_JAR_PATH="/config/papermc/papermc_server.jar"
+	echo "[info] CUSTOM_JAR_PATH not defined,(via -e CUSTOM_JAR_PATH), defaulting to '/config/minecraft/minecraft_server.jar' (Mojang Minecraft Java)" | ts '%Y-%m-%d %H:%M:%.S'
+	export CUSTOM_JAR_PATH="/config/minecraft/minecraft_server.jar"
 fi
 
 # get latest java version for package 'jre-openjdk-headless'
