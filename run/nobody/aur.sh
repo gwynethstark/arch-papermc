@@ -51,7 +51,7 @@ if [[ ! -z "${aur_packages}" ]]; then
 
 		# compile and install aur helper
 		# strip out restriction to not allow make as user root, used during make of aur helper
-		#sed -i -e 's~exit $E_ROOT~~g' "/usr/bin/makepkg"
+		sed -i -e 's~exit $E_ROOT~~g' "/usr/bin/makepkg"
 		# download and install aur helper
 		cd /tmp
 		git clone https://aur.archlinux.org/yay-bin.git
