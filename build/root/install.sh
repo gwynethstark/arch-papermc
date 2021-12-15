@@ -6,11 +6,6 @@ set -e
 # release tag name from build arg, stripped of build ver using string manipulation
 release_tag_name="${1//-[0-9][0-9]/}"
 
-if [[ -z "${release_tag_name}" ]]; then
-	echo "[warn] Release tag name from build arg is empty, exiting script..."
-	exit 1
-fi
-
 # build scripts
 ####
 
@@ -71,25 +66,6 @@ fi
 
 # custom
 ####
-
-https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar
-
-# get json for latest 'release'
-release_json=$(rcurl.sh -s 'https://launchermeta.mojang.com/mc/game/version_manifest_v2.json' |  jq '[.versions[] | select(.type=="release")][0]')
-
-# identify minecraft version
-id=$(echo "${release_json}" | jq -r .id)
-echo "[info] Minecraft Java version is '${id}'"
-
-# check release tag name matches version from json
-if [[ "${release_tag_name}" != "${id}" ]]; then
-	echo "[warn] Release tag name from build arg '${release_tag_name}' does not match id '${id}' from json, exiting script..."
-	exit 1
-fi
-
-# identify minecraft download url json
-url_json=$(echo "${release_json}" | jq -r .url)
-echo "[info] Minecraft Java JSON URL is '${url_json}'"
 
 # identify minecraft download url
 url_download=$(rcurl.sh -s "https://papermc.io/api/v2/projects/paper/versions/1.18.1/builds/77/downloads/paper-1.18.1-77.jar")
